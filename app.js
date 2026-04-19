@@ -60,7 +60,7 @@ function downloadPdf() {
 
     drawCanvas(text);
 
-    const { jsPDF } = window;
+    const { jsPDF } = window.jspdf; // ✅ correct
     const pdf = new jsPDF();
 
     const imgData = canvas.toDataURL("image/png");
