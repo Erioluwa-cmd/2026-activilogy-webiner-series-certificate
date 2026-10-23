@@ -1,29 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activus center</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Activus Center – Certificate Generator</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <main>
-        <section>
-            <b>Note: you are only allowed to create one certificate</b>
-            <div class="group">
-            <input type="text" placeholder="Enter your full name" class="name">
-            </div>
-            <canvas class="canvas" width="500" height="250"></canvas>
-           <div class="btn-group"> <button class="png-btn" onclick="downloadPng()">Download Img</button> <button class="pdf-btn" onclick="downloadPdf()">Download Pdf</button> </div>
-        </section>
-    </main>
-    <footer>
-        <p>
-            &copy;<span class="year"></span> the of Activus Healthcare of Nigeria limited
-        </p>
-    </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="app.js"></script>
+  <!-- Loader -->
+  <div id="loader">
+    <div class="loader-content">
+      <div class="spinner"></div>
+      <p>Loading Certificate Generator...</p>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app" class="hidden">
+    <main>
+      <section class="glass-card">
+        <div class="header">
+          <h1>Certificate Generator</h1>
+          <p class="note">You are only allowed to generate <strong>one</strong> certificate</p>
+        </div>
+
+        <div class="form-group">
+          <input type="text" class="name" placeholder="Enter your full name" autocomplete="off">
+        </div>
+
+        <canvas class="canvas"></canvas>
+
+        <div class="btn-group">
+          <button class="btn png-btn" onclick="downloadPng()">
+            <span>Download Image</span>
+          </button>
+          <button class="btn pdf-btn" onclick="downloadPdf()">
+            <span>Download PDF</span>
+          </button>
+        </div>
+
+        <div id="status" class="status"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; <span class="year"></span> Activus Healthcare of Nigeria Limited</p>
+    </footer>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
