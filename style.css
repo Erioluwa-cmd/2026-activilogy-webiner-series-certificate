@@ -1,100 +1,266 @@
 @media(max-width:970px){
-*{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    text-decoration: none;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    scroll-behavior: smooth;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body{
-    width: 100%;
-    height: 100vh;
+:root {
+  --primary: #4f46e5;
+  --primary-light: #818cf8;
+  --glass-bg: rgba(255, 255, 255, 0.12);
+  --glass-border: rgba(255, 255, 255, 0.25);
+  --text: #f8fafc;
+  --text-muted: #cbd5e1;
 }
 
-main{
-    width: 100%;
-    height: calc(100vh - 40px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #c0c0c0;
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+  color: var(--text);
+  overflow-x: hidden;
 }
 
-main section{
-    width: 85%;
-    height: 50%;
-    background-color: #c0c0c0;
-    box-shadow:8px 8px 16px #b4b4b4, -8px -8px 16px #ffff ;
-    display: flex;
+/* ========== LOADER ========== */
+#loader {
+  position: fixed;
+  inset: 0;
+  background: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.6s ease, visibility 0.6s;
+}
+
+#loader.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loader-content {
+  text-align: center;
+}
+
+.spinner {
+  width: 56px;
+  height: 56px;
+  border: 4px solid rgba(255,255,255,0.15);
+  border-top-color: var(--primary-light);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loader-content p {
+  color: var(--text-muted);
+  font-size: 15px;
+  letter-spacing: 0.5px;
+}
+
+/* ========== APP ========== */
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#app.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#app.visible {
+  animation: fadeInUp 0.7s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+/* Glass Card */
+.glass-card {
+  width: 100%;
+  max-width: 480px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 40px 32px;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.4),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  animation: cardAppear 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.header {
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  background: linear-gradient(to right, #c7d2fe, #e0e7ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.note {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.note strong {
+  color: #fbbf24;
+}
+
+/* Input */
+.form-group input {
+  width: 100%;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 0 20px;
+  font-size: 1.05rem;
+  color: white;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.form-group input::placeholder {
+  color: #94a3b8;
+}
+
+.form-group input:focus {
+  border-color: var(--primary-light);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 4px rgba(129, 140, 248, 0.2);
+}
+
+/* Canvas (hidden) */
+.canvas {
+  display: none;
+}
+
+/* Buttons */
+.btn-group {
+  display: flex;
+  gap: 14px;
+}
+
+.btn {
+  flex: 1;
+  height: 52px;
+  border: none;
+  border-radius: 14px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.png-btn {
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+}
+
+.pdf-btn {
+  background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+  box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  filter: none;
+}
+
+/* Status message */
+.status {
+  text-align: center;
+  font-size: 0.9rem;
+  min-height: 24px;
+  color: #fbbf24;
+}
+
+.status.error {
+  color: #f87171;
+}
+
+.status.success {
+  color: #4ade80;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .glass-card {
+    padding: 32px 24px;
+  }
+
+  .btn-group {
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    padding: 10px;
-    border-radius: 20px;
-}
+  }
 
-main section .group{
-    width: 90%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-}
-
-main section p{
-    font-size: 15px;
-    color: blue;
-}
-
-main section .group input{
-    width: 100%;
-    height: 55px;
-    background-color: #c0c0c0;
-    box-shadow:inset 5px 5px 10px #b4b4b4, inset -5px -5px 10px #ffff ;
-    border: none;
-    outline: none;
-    resize: none;
-    border-radius: 20px;
-    font-size:20px ;
-    padding: 0 10px;
-}
-
-main section .btn-group{
-    width: 90%;
-    height: 20%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-}
-
-main section .btn-group button{
-    width: 40%;
-    height: 100%;
-    background-color: #c0c0c0;
-    box-shadow: inset 5px 5px 10px #b4b4b4, inset -5px -5px 10px #ffff ;
-    border: none;
-    border-radius: 20px;
-    font-size: 20px;
-}
-
-main section canvas{
-    display: none;
-}
-
-footer{
-    width: 100%;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-footer p{
-    font-size: 15px;
+  .header h1 {
+    font-size: 1.5rem;
+  }
 }
 }
