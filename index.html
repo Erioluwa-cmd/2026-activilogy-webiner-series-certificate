@@ -21,23 +21,34 @@
   <div id="app" class="hidden">
     <main>
       <section class="glass-card">
+        
         <div class="header">
           <h1>Certificate Generator</h1>
           <p class="note">You are only allowed to generate <strong>one</strong> certificate</p>
+        </div>
+
+        <!-- Live Preview -->
+        <div class="preview-wrapper">
+          <div class="preview-label">Live Preview</div>
+          <div class="preview-container">
+            <canvas class="preview-canvas"></canvas>
+            <div class="preview-placeholder">Enter your name to see preview</div>
+          </div>
         </div>
 
         <div class="form-group">
           <input type="text" class="name" placeholder="Enter your full name" autocomplete="off">
         </div>
 
+        <!-- Hidden canvas used for high-quality download -->
         <canvas class="canvas"></canvas>
 
         <div class="btn-group">
           <button class="btn png-btn" onclick="downloadPng()">
-            <span>Download Image</span>
+            Download Image
           </button>
           <button class="btn pdf-btn" onclick="downloadPdf()">
-            <span>Download PDF</span>
+            Download PDF
           </button>
         </div>
 
