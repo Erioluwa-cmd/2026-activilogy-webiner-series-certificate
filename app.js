@@ -2,8 +2,13 @@
 document.querySelector(".year").textContent = new Date().getFullYear();
 
 // ========== Elements ==========
-const canvas = document.querySelector(".canvas");
+const canvas = document.querySelector(".canvas");           // high-res for download
 const ctx = canvas.getContext("2d");
+
+const previewCanvas = document.querySelector(".preview-canvas");
+const previewCtx = previewCanvas.getContext("2d");
+const previewPlaceholder = document.querySelector(".preview-placeholder");
+
 const nameInput = document.querySelector(".name");
 const statusEl = document.querySelector("#status");
 const pngBtn = document.querySelector(".png-btn");
@@ -31,16 +36,70 @@ function updateUI() {
   }
 }
 
-// ========== Image Loading ==========
+// ========== Image ==========
 const img = new Image();
 img.crossOrigin = "anonymous";
-img.src = "certificate.png"; // make sure this file exists in the same folder
+img.src = "certificate.png";   // ← make sure this file is in the same folder
 
 img.onload = function () {
+  // Set high-res canvas size
   canvas.width = img.width;
   canvas.height = img.height;
-  ctx.drawImage(img, 0, 0);
+
+  // Set preview canvas size (we will scale it with CSS)
+  previewCanvas.width = img.width;
+  previewCanvas.height = img.height;
+
+  // Draw initial empty certificate on preview
+  drawPreview("");
 };
+
+// ========== Drawing Functions ==========
+function drawOnContext(context, text, width, height) {
+  context.clearRect(0, 0, width, height);
+  context.drawImage(img, 0, 0, width, height);
+
+  if (text.trim() !== "") {
+    context.fillStyle = "#000000";
+    // Scale font size based on certificate width
+    const fontSize = Math.floor(width * 0.055); // adjust this number if text is too big/small
+    context.font = `bold ${fontSize}px Arial`;
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+
+    // Adjust Y position if needed (currently center)
+    const yPos = height * 0.52;   // change this value to move text up/down
+    context.fillText(text, width / 2, yPos);
+  }
+}
+
+function drawPreview(text) {
+  if (!img.complete) return;
+
+  drawOnContext(previewCtx, text, previewCanvas.width, previewCanvas.height);
+
+  if (text.trim() === "") {
+    previewPlaceholder.classList.remove("hidden");
+  } else {
+    previewPlaceholder.classList.add("hidden");
+  }
+}
+
+function drawCanvas(text) {
+  drawOnContext(ctx, text, canvas.width, canvas.height);
+  return canvas;
+}
+
+// ========== Live Preview on Typing ==========
+nameInput.addEventListener("input", () => {
+  const text = nameInput.value;
+  drawPreview(text);
+
+  // Clear status when user starts typing again
+  if (statusEl.textContent && !hasAlreadyGenerated()) {
+    statusEl.textContent = "";
+  }
+});
 
 // ========== Helpers ==========
 function getText() {
@@ -51,21 +110,6 @@ function getText() {
     return null;
   }
   return value;
-}
-
-function drawCanvas(text) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(img, 0, 0);
-
-  ctx.fillStyle = "#000000";
-  ctx.font = "bold 80px Arial";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-
-  // Adjust Y position if needed for your certificate design
-  ctx.fillText(text, canvas.width / 2, canvas.height / 2);
-
-  return canvas;
 }
 
 // ========== Download PNG ==========
@@ -106,8 +150,10 @@ function downloadPdf() {
   drawCanvas(text);
 
   const { jsPDF } = window.jspdf;
+
+  // Create PDF matching the certificate size
   const pdf = new jsPDF({
-    orientation: "landscape",
+    orientation: canvas.width > canvas.height ? "landscape" : "portrait",
     unit: "px",
     format: [canvas.width, canvas.height]
   });
@@ -124,10 +170,9 @@ function downloadPdf() {
 
 // ========== Loader + Init ==========
 window.addEventListener("load", () => {
-  // Simulate a short elegant loader
   setTimeout(() => {
     document.getElementById("loader").classList.add("fade-out");
-    
+
     setTimeout(() => {
       document.getElementById("loader").style.display = "none";
       const app = document.getElementById("app");
@@ -135,5 +180,5 @@ window.addEventListener("load", () => {
       app.classList.add("visible");
       updateUI();
     }, 600);
-  }, 1200); // adjust duration if you want
+  }, 1100);
 });
